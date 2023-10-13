@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:guzogoclone/domain/model/cabin_class.dart';
 import 'package:guzogoclone/presentation/providers/airport_provider.dart';
+import 'package:guzogoclone/presentation/providers/bottom_nav_provider.dart';
 import 'package:guzogoclone/presentation/providers/cabin_class_provider.dart';
 import 'package:guzogoclone/presentation/providers/passenger_provider.dart';
+import 'package:guzogoclone/presentation/providers/trip_way_provider.dart';
 import 'package:guzogoclone/presentation/ui/home_screen/home.dart';
 import 'package:provider/provider.dart';
 
@@ -21,6 +23,8 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider(create: (_) => DepartureAirportProvider()),
         ChangeNotifierProvider(create: (_) => DestinationAirportProvider()),
         ChangeNotifierProvider(create: (_) => PassengerProvider()),
+        ChangeNotifierProvider(create: (_) => TripWayProvider()),
+        ChangeNotifierProvider(create: (_) => BottomNavProvider()),
       ],
       child: MaterialApp(
           debugShowCheckedModeBanner: false,
@@ -33,9 +37,3 @@ class MyApp extends StatelessWidget {
     );
   }
 }
-
-
-// ChangeNotifierProvider(
-//       create: (context) => CabinClassProvider(),
-//       child: Consumer<CabinClassProvider>(
-//         builder: (context,value,child)=>

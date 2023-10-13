@@ -49,7 +49,7 @@ class ShowDepartureLocationSelection extends StatelessWidget {
               ),
               TextField(
                 onChanged: (value) =>
-                    Provider.of<DepartureAirportProvider>(context)
+                    Provider.of<DepartureAirportProvider>(context,listen: false)
                         .updateList(value),
                 decoration: InputDecoration(
                   filled: true,
@@ -67,14 +67,14 @@ class ShowDepartureLocationSelection extends StatelessWidget {
               ),
               const Divider(),
               const Text('Direct Airports'),
-              Provider.of<DepartureAirportProvider>(context).displayList == 0
+              Provider.of<DepartureAirportProvider>(context,listen: false).displayList.isEmpty
                   ? const Center(
                       child: Text('No results found'),
                     )
                   : Expanded(
                       child: ListView.builder(
                         itemCount:
-                            Provider.of<DepartureAirportProvider>(context)
+                            Provider.of<DepartureAirportProvider>(context,listen: false)
                                 .displayList
                                 .length,
                         itemBuilder: (context, index) {

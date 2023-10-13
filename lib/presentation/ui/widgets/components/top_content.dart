@@ -2,7 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:guzogoclone/constants/colors.dart';
 import 'package:guzogoclone/presentation/providers/airport_provider.dart';
+import 'package:guzogoclone/presentation/providers/bottom_nav_provider.dart';
 import 'package:guzogoclone/presentation/ui/show_location_selection.dart';
+import 'package:guzogoclone/presentation/ui/tabs/notification_tab.dart';
 
 import 'package:guzogoclone/presentation/ui/widgets/custom_tab_view.dart';
 import 'package:provider/provider.dart';
@@ -18,11 +20,11 @@ class TopContent extends StatefulWidget {
 }
 
 class _TopContentState extends State<TopContent> {
-  int _selectedTab = 0;
+  bool isSwapped = false;
 
-  void changeTab(int index) {
+  void swapLocationPicker(bool value) {
     setState(() {
-      _selectedTab = index;
+      isSwapped = value;
     });
   }
 
@@ -57,7 +59,10 @@ class _TopContentState extends State<TopContent> {
                           color: Colors.amber.shade700)),
                   const Spacer(),
                   IconButton(
-                    onPressed: () {},
+                    onPressed: () {
+                      Provider.of<BottomNavProvider>(context, listen: false)
+                          .selectItem(2);
+                    },
                     icon: Container(
                       // padding: const EdgeInsets.all(10.0),
                       width: 40,
@@ -81,10 +86,9 @@ class _TopContentState extends State<TopContent> {
               const SizedBox(
                 height: 40,
               ),
-              CustomTabView(
-                index: _selectedTab,
-                changeTab: changeTab,
-              ),
+              //////////////////////////////////
+              const CustomTabBar(),
+              ////////////////////////////////
               // the buttons for destination and departure location are lie here
               const SizedBox(
                 height: 20,
@@ -92,11 +96,17 @@ class _TopContentState extends State<TopContent> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  const DepartureLocationPicker(
-                    proposition: 'From',
-                  ),
+                  isSwapped
+                      ? const DestinationLocationPicker(
+                          proposition: 'To',
+                        )
+                      : const DepartureLocationPicker(
+                          proposition: 'From',
+                        ),
                   IconButton(
-                    onPressed: () {},
+                    onPressed: () {
+                      swapLocationPicker(!isSwapped);
+                    },
                     icon: Container(
                       width: 40,
                       height: 40,
@@ -120,9 +130,13 @@ class _TopContentState extends State<TopContent> {
                       ),
                     ),
                   ),
-                  const DestinationLocationPicker(
-                    proposition: 'To',
-                  )
+                  isSwapped
+                      ? const DepartureLocationPicker(
+                          proposition: 'From',
+                        )
+                      : const DestinationLocationPicker(
+                          proposition: 'To',
+                        )
                 ],
               )
             ],
@@ -144,7 +158,7 @@ class DestinationLocationPicker extends StatelessWidget {
   Widget build(BuildContext context) {
     return TextButton(
       onPressed: () {
-          showBottomSheet(
+        showBottomSheet(
             context: context,
             builder: (context) => const ShowDestinationLocationSelection());
       },

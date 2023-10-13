@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:guzogoclone/constants/colors.dart';
+import 'package:guzogoclone/presentation/providers/bottom_nav_provider.dart';
+import 'package:guzogoclone/presentation/ui/tabs/notification_tab.dart';
 import 'package:guzogoclone/presentation/ui/tabs/search_tab.dart';
+import 'package:provider/provider.dart';
 
 class Home extends StatefulWidget {
   const Home({super.key});
@@ -10,26 +13,25 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
-  int _selectedIndex = 0;
-  // ignore: prefer_final_fields
-  List<Widget> _widgetOptions = <Widget>[
+  // int _selectedIndex =0
+  
+  final List<Widget> _widgetOptions = <Widget>[
     const SearchTab(),
     const Text('Booking'),
-    const Text('notifications'),
+    const NotificationTab(),
     const Text('setting')
   ];
 
   void onItemTapped(int index) {
-    setState(() {
-      _selectedIndex = index;
-    });
+    Provider.of<BottomNavProvider>(context,listen: false).selectItem(index);
   }
 
   @override
   Widget build(BuildContext context) {
+    final selectedIndex = Provider.of<BottomNavProvider>(context).selectedItemIndex;
     return Scaffold(
       body: Center(
-        child: _widgetOptions.elementAt(_selectedIndex),
+        child: _widgetOptions.elementAt(selectedIndex),
       ),
       bottomNavigationBar: BottomNavigationBar(
         unselectedItemColor: Colors.grey.shade300,
@@ -52,7 +54,7 @@ class _HomeState extends State<Home> {
             label: 'Setting',
           ),
         ],
-        currentIndex: _selectedIndex,
+        currentIndex: selectedIndex,
         onTap: onItemTapped,
       ),
     );
