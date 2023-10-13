@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:guzogoclone/constants/colors.dart';
-import 'package:guzogoclone/presentation/ui/location_list_screen.dart';
+import 'package:guzogoclone/presentation/providers/airport_provider.dart';
+import 'package:guzogoclone/presentation/ui/show_location_selection.dart';
 
 import 'package:guzogoclone/presentation/ui/widgets/custom_tab_view.dart';
+import 'package:provider/provider.dart';
 
 class TopContent extends StatefulWidget {
   final double containerWidth;
@@ -32,7 +34,7 @@ class _TopContentState extends State<TopContent> {
           width: widget.containerWidth,
           height: widget.containerHeight,
           child: Image.asset(
-            'images/road.jpg',
+            'images/road.png',
             color: Colors.indigo.withOpacity(0.7),
             colorBlendMode: BlendMode.modulate,
             fit: BoxFit.cover,
@@ -61,13 +63,14 @@ class _TopContentState extends State<TopContent> {
                       width: 40,
                       height: 40,
                       decoration: BoxDecoration(
-                        borderRadius: BorderRadius.all(Radius.circular(5)),
+                        borderRadius:
+                            const BorderRadius.all(Radius.circular(5)),
                         border: Border.all(
                           color: Colors.white60,
                           width: 3.0,
                         ),
                       ),
-                      child: Icon(
+                      child: const Icon(
                         Icons.notifications,
                         color: Colors.white60,
                       ),
@@ -75,25 +78,23 @@ class _TopContentState extends State<TopContent> {
                   )
                 ],
               ),
-              SizedBox(
+              const SizedBox(
                 height: 40,
               ),
               CustomTabView(
                 index: _selectedTab,
                 changeTab: changeTab,
               ),
-              //TODO: the buttons for destination and departure location are lie here
-              SizedBox(
+              // the buttons for destination and departure location are lie here
+              const SizedBox(
                 height: 20,
               ),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  const LocationPicker(
-                      proposition: 'From',
-                      city: 'Addis Ababa',
-                      cityCode: 'ADD',
-                      airportName: 'Bole International Airport'),
+                  const DepartureLocationPicker(
+                    proposition: 'From',
+                  ),
                   IconButton(
                     onPressed: () {},
                     icon: Container(
@@ -103,7 +104,7 @@ class _TopContentState extends State<TopContent> {
                         color: AppColors.white,
                         borderRadius: BorderRadius.all(Radius.circular(20)),
                       ),
-                      child: Column(
+                      child: const Column(
                         mainAxisAlignment: MainAxisAlignment.center,
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
@@ -119,11 +120,9 @@ class _TopContentState extends State<TopContent> {
                       ),
                     ),
                   ),
-                  const LocationPicker(
-                      proposition: 'To',
-                      city: 'Nairobi',
-                      cityCode: 'NRB',
-                      airportName: 'Jommo Kenyatta Airport')
+                  const DestinationLocationPicker(
+                    proposition: 'To',
+                  )
                 ],
               )
             ],
@@ -134,53 +133,116 @@ class _TopContentState extends State<TopContent> {
   }
 }
 
-class LocationPicker extends StatelessWidget {
+class DestinationLocationPicker extends StatelessWidget {
   final String proposition;
-  final String city;
-  final String cityCode;
-  final String airportName;
-  const LocationPicker({
+  const DestinationLocationPicker({
     super.key,
     required this.proposition,
-    required this.city,
-    required this.cityCode,
-    required this.airportName,
   });
 
   @override
   Widget build(BuildContext context) {
     return TextButton(
       onPressed: () {
-        Navigator.push(context, MaterialPageRoute(builder: (context) {
-          return LocationListScreen();
-        }));
+          showBottomSheet(
+            context: context,
+            builder: (context) => const ShowDestinationLocationSelection());
       },
       child: Column(
         children: [
           Text(
             proposition,
-            style: TextStyle(
+            style: const TextStyle(
                 fontSize: 16.0,
                 fontWeight: FontWeight.w400,
                 color: AppColors.white),
           ),
           Text(
-            cityCode,
-            style: TextStyle(
+            Provider.of<DestinationAirportProvider>(context)
+                .selectedDestination
+                .cityCode
+                .toString(),
+            style: const TextStyle(
                 fontSize: 24.0,
                 fontWeight: FontWeight.w400,
                 color: AppColors.white),
           ),
           Text(
-            city,
-            style: TextStyle(
+            Provider.of<DestinationAirportProvider>(context)
+                .selectedDestination
+                .city
+                .toString(),
+            style: const TextStyle(
                 fontSize: 16.0,
                 fontWeight: FontWeight.w400,
                 color: AppColors.white),
           ),
           Text(
-            airportName,
-            style: TextStyle(
+            Provider.of<DestinationAirportProvider>(context)
+                .selectedDestination
+                .airportName
+                .toString(),
+            style: const TextStyle(
+                fontSize: 10.0,
+                fontWeight: FontWeight.w400,
+                color: AppColors.white),
+          )
+        ],
+      ),
+    );
+  }
+}
+
+class DepartureLocationPicker extends StatelessWidget {
+  final String proposition;
+  const DepartureLocationPicker({
+    super.key,
+    required this.proposition,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return TextButton(
+      onPressed: () {
+        showBottomSheet(
+            context: context,
+            builder: (context) => const ShowDepartureLocationSelection());
+      },
+      child: Column(
+        children: [
+          Text(
+            proposition,
+            style: const TextStyle(
+                fontSize: 16.0,
+                fontWeight: FontWeight.w400,
+                color: AppColors.white),
+          ),
+          Text(
+            Provider.of<DepartureAirportProvider>(context)
+                .selectedDeparture
+                .cityCode
+                .toString(),
+            style: const TextStyle(
+                fontSize: 24.0,
+                fontWeight: FontWeight.w400,
+                color: AppColors.white),
+          ),
+          Text(
+            Provider.of<DepartureAirportProvider>(context)
+                .selectedDeparture
+                .city
+                .toString(),
+            style: const TextStyle(
+                fontSize: 16.0,
+                fontWeight: FontWeight.w400,
+                color: AppColors.white),
+          ),
+          Text(
+            Provider.of<DepartureAirportProvider>(context)
+                .selectedDeparture
+                .airportName
+                .toString(),
+            style: const TextStyle(
                 fontSize: 10.0,
                 fontWeight: FontWeight.w400,
                 color: AppColors.white),
