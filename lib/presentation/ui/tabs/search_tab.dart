@@ -155,140 +155,155 @@ class BottomContent extends StatelessWidget {
   }
 
   Widget passengerBottomSheet(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.all(10),
-      height: 300,
-      child: Column(
-        children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+    return Consumer<PassengerProvider>(
+      builder: (context, value, child) {
+        return Container(
+          padding: const EdgeInsets.all(10),
+          height: 300,
+          child: Column(
             children: [
-              const Text('Passengers'),
-              const Spacer(),
-              TextButton(
-                onPressed: () {
-                  Navigator.pop(context);
-                },
-                child: const Text(
-                  'Cancel',
-                  style: TextStyle(color: AppColors.primaryColor),
-                ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  const Text('Passengers'),
+                  const Spacer(),
+                  TextButton(
+                    onPressed: () {
+                      Navigator.pop(context);
+                    },
+                    child: const Text(
+                      'Cancel',
+                      style: TextStyle(color: AppColors.primaryColor),
+                    ),
+                  ),
+                  const SizedBox(
+                    width: 10,
+                  ),
+                  TextButton(
+                    onPressed: () {
+                      value.counts.add(value.adultCount);
+                      value.counts.add(value.childrenCount);
+                      value.counts.add(value.infantCount);
+
+                      Navigator.pop(context);
+                    },
+                    child: const Text(
+                      'Done',
+                      style: TextStyle(color: AppColors.primaryColor),
+                    ),
+                  )
+                ],
               ),
               const SizedBox(
-                width: 10,
+                height: 5,
               ),
-              TextButton(
-                onPressed: () {
-                  Navigator.pop(context);
-                },
-                child: const Text(
-                  'Done',
-                  style: TextStyle(color: AppColors.primaryColor),
-                ),
-              )
-            ],
-          ),
-          const SizedBox(
-            height: 5,
-          ),
-          const Divider(),
-          Row(
-            children: [
-              Text(
-                Provider.of<PassengerProvider>(context, listen: false)
-                    .passenger[0]
-                    .category,
-                style: const TextStyle(color: AppColors.primaryColor),
-              ),
-              const Spacer(),
+              const Divider(),
               Row(
                 children: [
-                  IconButton(
-                    onPressed: () {},
-                    icon: const Icon(
-                      Icons.remove_circle,
-                    ),
+                  Text(
+                    Provider.of<PassengerProvider>(context, listen: false)
+                        .passenger[0]
+                        .category,
+                    style: const TextStyle(color: AppColors.primaryColor),
                   ),
-                  Text(Provider.of<PassengerProvider>(context)
-                      .passenger[0]
-                      .count
-                      .toString()),
-                  IconButton(
-                    onPressed: () {},
-                    icon: const Icon(
-                      Icons.add_circle,
-                    ),
+                  const Spacer(),
+                  Row(
+                    children: [
+                      IconButton(
+                        onPressed: () {
+                          if (value.adultCount > 0) {
+                            value.decrementAdultCount();
+                          }
+                        },
+                        icon: const Icon(
+                          Icons.remove_circle,
+                        ),
+                      ),
+                      Text(value.adultCount.toString()),
+                      IconButton(
+                        onPressed: () {
+                          value.incrementAdultCount();
+                        },
+                        icon: const Icon(
+                          Icons.add_circle,
+                        ),
+                      ),
+                    ],
+                  )
+                ],
+              ),
+              const Divider(),
+              Row(
+                children: [
+                  Text(
+                    value.passenger[1].category,
+                    style: const TextStyle(color: AppColors.primaryColor),
                   ),
+                  const Spacer(),
+                  Row(
+                    children: [
+                      IconButton(
+                        onPressed: () {
+                          if (value.childrenCount > 0) {
+                            value.decrementChildrenCount();
+                          }
+                        },
+                        icon: const Icon(
+                          Icons.remove_circle,
+                        ),
+                      ),
+                      Text('${value.childrenCount}'),
+                      IconButton(
+                        onPressed: () {
+                          value.incrementChildrenCount();
+                        },
+                        icon: const Icon(
+                          Icons.add_circle,
+                        ),
+                      ),
+                    ],
+                  )
+                ],
+              ),
+              const Divider(),
+              Row(
+                children: [
+                  Text(
+                    Provider.of<PassengerProvider>(context, listen: false)
+                        .passenger[2]
+                        .category,
+                    style: const TextStyle(color: AppColors.primaryColor),
+                  ),
+                  const Spacer(),
+                  Row(
+                    children: [
+                      IconButton(
+                        onPressed: () {
+                          if (value.infantCount > 0) {
+                            value.decrementInfantCount();
+                          }
+                        },
+                        icon: const Icon(
+                          Icons.remove_circle,
+                        ),
+                      ),
+                      Text('${value.infantCount}'),
+                      IconButton(
+                        onPressed: () {
+                          value.incrementInfantCount();
+                        },
+                        icon: const Icon(
+                          Icons.add_circle,
+                        ),
+                      ),
+                    ],
+                  )
                 ],
               )
             ],
           ),
-          const Divider(),
-          Row(
-            children: [
-              Text(
-                Provider.of<PassengerProvider>(context, listen: false)
-                    .passenger[1]
-                    .category,
-                style: const TextStyle(color: AppColors.primaryColor),
-              ),
-              const Spacer(),
-              Row(
-                children: [
-                  IconButton(
-                    onPressed: () {},
-                    icon: const Icon(
-                      Icons.remove_circle,
-                    ),
-                  ),
-                  Text(Provider.of<PassengerProvider>(context)
-                      .passenger[0]
-                      .count
-                      .toString()),
-                  IconButton(
-                    onPressed: () {},
-                    icon: const Icon(
-                      Icons.add_circle,
-                    ),
-                  ),
-                ],
-              )
-            ],
-          ),
-          const Divider(),
-          Row(
-            children: [
-              Text(
-                Provider.of<PassengerProvider>(context, listen: false)
-                    .passenger[2]
-                    .category,
-                style: const TextStyle(color: AppColors.primaryColor),
-              ),
-              const Spacer(),
-              Row(
-                children: [
-                  IconButton(
-                    onPressed: () {},
-                    icon: const Icon(
-                      Icons.remove_circle,
-                    ),
-                  ),
-                  Text(Provider.of<PassengerProvider>(context)
-                      .passenger[0]
-                      .count
-                      .toString()),
-                  IconButton(
-                    onPressed: () {},
-                    icon: const Icon(
-                      Icons.add_circle,
-                    ),
-                  ),
-                ],
-              )
-            ],
-          )
-        ],
-      ),
+        );
+      },
     );
   }
 
@@ -366,58 +381,63 @@ class BottomContent extends StatelessWidget {
                 ],
               ),
             ),
-            Padding(
-              padding: const EdgeInsets.all(10.0),
-              child: Column(
-                children: [
-                  const Text(
-                    'Passengers',
-                    style: TextStyle(
-                      fontSize: 15.0,
-                      fontWeight: FontWeight.w400,
-                      color: AppColors.lightGrey,
+            Consumer<PassengerProvider>(builder: (context, value, child) {
+              return Padding(
+                padding: const EdgeInsets.all(10.0),
+                child: Column(
+                  children: [
+                    const Text(
+                      'Passengers',
+                      style: TextStyle(
+                        fontSize: 15.0,
+                        fontWeight: FontWeight.w400,
+                        color: AppColors.lightGrey,
+                      ),
                     ),
-                  ),
-                  IconButton(
-                    onPressed: () {
-                      showModalBottomSheet(
-                          context: context, builder: passengerBottomSheet);
-                    },
-                    icon: const Row(
-                      children: [
-                        Row(
-                          children: [
-                            Icon(
-                              Icons.person,
-                              size: 35,
-                            ),
-                            Text('2')
-                          ],
-                        ),
-                        SizedBox(
-                          width: 10,
-                        ),
-                        Row(
-                          children: [
-                            Icon(
-                              Icons.person,
-                              size: 25,
-                            ),
-                            Text('0')
-                          ],
-                        ),
-                        SizedBox(
-                          width: 10,
-                        ),
-                        Row(
-                          children: [Icon(Icons.person), Text('0')],
-                        ),
-                      ],
+                    IconButton(
+                      onPressed: () {
+                        showModalBottomSheet(
+                            context: context, builder: passengerBottomSheet);
+                      },
+                      icon: Row(
+                        children: [
+                          Row(
+                            children: [
+                              const Icon(
+                                Icons.person,
+                                size: 35,
+                              ),
+                              Text('${value.adultCount}')
+                            ],
+                          ),
+                          const SizedBox(
+                            width: 10,
+                          ),
+                          Row(
+                            children: [
+                              const Icon(
+                                Icons.person,
+                                size: 25,
+                              ),
+                              Text('${value.childrenCount}')
+                            ],
+                          ),
+                          const SizedBox(
+                            width: 10,
+                          ),
+                          Row(
+                            children: [
+                              Icon(Icons.person),
+                              Text('${value.infantCount}'),
+                            ],
+                          ),
+                        ],
+                      ),
                     ),
-                  ),
-                ],
-              ),
-            ),
+                  ],
+                ),
+              );
+            })
           ],
         ),
       ],
